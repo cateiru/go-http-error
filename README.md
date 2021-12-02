@@ -11,11 +11,18 @@ go get -u github.com/cateiru/go-http-error
 ## Usage
 
 ```go
-// Create 404 notfound error
-err := httperror.NewNotFoundError(errors.New("error message")).Wrap()
+import (
+    "github.com/cateiru/go-http-error/httperror"
+    "github.com/cateiru/go-http-error/httperror/status"
+)
 
-// Create custom http status error
-err = httperror.NewError(301, errors.New("error message")).Wrap()
+// Create 404 notfound error
+err := status.NewNotFoundError(errors.New("error message")).Wrap()
+
+// Create 404 error, and add filename and line.
+fileName := "example.com"
+line := 17
+err = status.NewNotFoundError(errors.New("error message")).Caller(fileName, line).Wrap()
 
 // Cast to type HTTPError
 if castedErr, ok := httperror.CastHTTPError(err); ok {
@@ -27,10 +34,8 @@ if castedErr, ok := httperror.CastHTTPError(err); ok {
     errMessage  := unwrapErr.Error()
 }
 
-// Create 404 error, and add filename and line.
-fileName := "example.com"
-line := 17
-err = httperror.NewNotFoundError(errors.New("error message")).Caller(fileName, line).Wrap()
+// Create custom http status error
+err = httperror.NewError(301, errors.New("error message")).Wrap()
 
 ```
 
