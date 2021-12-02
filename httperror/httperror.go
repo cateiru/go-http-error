@@ -21,7 +21,7 @@ type HTTPError struct {
 //	errMessage := err.Error()
 func (c *HTTPError) Error() string {
 	if len(c.FileName) != 0 {
-		return fmt.Sprintf("%s at line %d: %d:: %s", c.FileName, c.Line, c.StatusCode, c.Err.Error())
+		return fmt.Sprintf("\"%s\", line %d, %d:: %s", c.FileName, c.Line, c.StatusCode, c.Err.Error())
 	}
 	return fmt.Sprintf("%d:: %s", c.StatusCode, c.Err.Error())
 }
@@ -73,10 +73,10 @@ func (c *HTTPError) Wrap() error {
 // If it cannot be cast, it returns (nil, false).
 //
 // Example:
-//	if httpError, ok := ValidateHTTPError(err); ok {
+//	if httpError, ok := CastHTTPError(err); ok {
 //		...
 //	}
-func ValidateHTTPError(err error) (*HTTPError, bool) {
+func CastHTTPError(err error) (*HTTPError, bool) {
 	if err, ok := err.(*HTTPError); ok {
 		return err, true
 	}

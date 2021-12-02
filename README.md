@@ -14,15 +14,24 @@ go get -u github.com/cateiru/go-http-error
 // Create 404 notfound error
 err := httperror.NewNotFoundError(errors.New("error message")).Wrap()
 
+// Create custom http status error
+err = httperror.NewError(301, errors.New("error message")).Wrap()
+
+// Cast to type HTTPError
+if castedErr, ok := httperror.CastHTTPError(err); ok {
+    fileName := castedErr.FileName
+    line := castedErr.Line
+    statusCode := castedErr.StatusCode
+
+    unwrapErr := castedErr.Unwrap()
+    errMessage  := unwrapErr.Error()
+}
 
 // Create 404 error, and add filename and line.
 fileName := "example.com"
 line := 17
 err = httperror.NewNotFoundError(errors.New("error message")).Caller(fileName, line).Wrap()
 
-
-// Create custom http status error
-err = httperror.NewError(301, errors.New("error message")).Wrap()
 ```
 
 ### Example

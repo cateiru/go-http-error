@@ -131,7 +131,7 @@ func NewExpectationFailedError(err error) *HTTPError {
 // 418 I'm a teapot
 //
 // See more: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
-func NewStatusTeapotError(err error) *HTTPError {
+func NewTeapotError(err error) *HTTPError {
 	return NewError(http.StatusTeapot, err)
 }
 
