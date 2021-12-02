@@ -1,5 +1,7 @@
 # Go HTTP Error
 
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/cateiru/go-http-error?style=flat-square) [![Go Reference](https://pkg.go.dev/badge/github.com/cateiru/go-http-error.svg)](https://pkg.go.dev/github.com/cateiru/go-http-error)
+
 Wraps the normal error and provides an error that is easy to use with net/http.
 
 ## Install
