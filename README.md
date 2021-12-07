@@ -21,16 +21,17 @@ import (
 // Create 404 notfound error
 err := status.NewNotFoundError(errors.New("error message")).Wrap()
 
-// Create 404 error, and add filename and line.
+// Create 404 error, and add custom code, filename and line.
 fileName := "example.com"
 line := 17
-err = status.NewNotFoundError(errors.New("error message")).Caller(fileName, line).Wrap()
+err = status.NewNotFoundError(errors.New("error message")).Caller(fileName, line).AddCode(10).Wrap()
 
 // Cast to type HTTPError
 if castedErr, ok := httperror.CastHTTPError(err); ok {
     fileName := castedErr.FileName
     line := castedErr.Line
     statusCode := castedErr.StatusCode
+    code := castedErr.Code
 
     unwrapErr := castedErr.Unwrap()
     errMessage  := unwrapErr.Error()
@@ -38,7 +39,6 @@ if castedErr, ok := httperror.CastHTTPError(err); ok {
 
 // Create custom http status error
 err = httperror.NewError(301, errors.New("error message")).Wrap()
-
 ```
 
 ### Example

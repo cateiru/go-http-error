@@ -15,7 +15,7 @@ func main() {
 	fmt.Println(err.Error())
 
 	// Create 404 error, and add filename and line.
-	err = status.NewNotFoundError(errors.New("error message")).Caller("example.go", 17).Wrap()
+	err = status.NewNotFoundError(errors.New("error message")).Caller("example.go", 17).AddCode(0).Wrap()
 
 	fmt.Println(err.Error())
 
@@ -23,6 +23,7 @@ func main() {
 		fmt.Println(castedErr.FileName)
 		fmt.Println(castedErr.Line)
 		fmt.Println(castedErr.StatusCode)
+		fmt.Println(castedErr.Code)
 		fmt.Println(castedErr.Unwrap().Error())
 	}
 

@@ -10,6 +10,8 @@ type HTTPError struct {
 	FileName string
 	Line     int
 
+	Code int
+
 	Err error
 }
 
@@ -43,6 +45,7 @@ func NewError(statusCode int, err error) *HTTPError {
 		StatusCode: statusCode,
 		FileName:   "",
 		Line:       0,
+		Code:       0,
 		Err:        err,
 	}
 }
@@ -56,6 +59,16 @@ func NewError(statusCode int, err error) *HTTPError {
 func (c *HTTPError) Caller(fileName string, line int) *HTTPError {
 	c.FileName = fileName
 	c.Line = line
+
+	return c
+}
+
+// Added custom codes.
+//
+// Example:
+//	err  NewNotFoundError(err).AddCode(10).Wrap()
+func (c *HTTPError) AddCode(code int) *HTTPError {
+	c.Code = code
 
 	return c
 }
