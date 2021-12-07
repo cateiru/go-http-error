@@ -18,12 +18,13 @@ func TestCreateError(t *testing.T) {
 }
 
 func TestCastError(t *testing.T) {
-	err := status.NewInternalServerErrorError(errors.New("test")).Caller("test.go", 10).Wrap()
+	err := status.NewInternalServerErrorError(errors.New("test")).Caller("test.go", 10).AddCode(10).Wrap()
 
 	if castedErr, ok := httperror.CastHTTPError(err); ok {
 		require.Equal(t, castedErr.StatusCode, 500)
 		require.Equal(t, castedErr.Unwrap().Error(), "test")
 		require.Equal(t, castedErr.FileName, "test.go")
+		require.Equal(t, castedErr.Code, 10)
 		require.Equal(t, castedErr.Line, 10)
 	}
 }
