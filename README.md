@@ -19,10 +19,10 @@ import (
 )
 
 // Create 404 notfound error
-err := status.NewNotFoundError(errors.New("error message")).Wrap()
+err := status.NewNotFoundError(errors.New("error message"))
 
 // Create 404 error, and add custom code, filename and line.
-err = status.NewNotFoundError(errors.New("error message")).Caller().AddCode(10).Wrap()
+err = status.NewNotFoundError(errors.New("error message")).Caller().AddCode(10)
 
 // Cast to type HTTPError
 if castedErr, ok := httperror.CastHTTPError(err); ok {
@@ -36,7 +36,7 @@ if castedErr, ok := httperror.CastHTTPError(err); ok {
 }
 
 // Create custom http status error
-err = httperror.NewError(301, errors.New("error message")).Wrap()
+err = httperror.NewError(301, errors.New("error message"))
 ```
 
 ### Example
