@@ -10,12 +10,12 @@ import (
 
 func main() {
 	// Create 404 notfound error
-	err := status.NewNotFoundError(errors.New("error message")).Wrap()
+	err := status.NewNotFoundError(errors.New("error message"))
 
 	fmt.Println(err.Error())
 
 	// Create 404 error, and add filename and line.
-	err = status.NewNotFoundError(errors.New("error message")).Caller("example.go", 17).AddCode(0).Wrap()
+	err = status.NewNotFoundError(errors.New("error message")).Caller().AddCode(0)
 
 	fmt.Println(err.Error())
 
@@ -28,7 +28,7 @@ func main() {
 	}
 
 	// Create custom http status error
-	err = httperror.NewError(301, errors.New("error message")).Wrap()
+	err = httperror.NewError(301, errors.New("error message"))
 
 	fmt.Println(err.Error())
 }

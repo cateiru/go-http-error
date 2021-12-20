@@ -22,9 +22,7 @@ import (
 err := status.NewNotFoundError(errors.New("error message")).Wrap()
 
 // Create 404 error, and add custom code, filename and line.
-fileName := "example.com"
-line := 17
-err = status.NewNotFoundError(errors.New("error message")).Caller(fileName, line).AddCode(10).Wrap()
+err = status.NewNotFoundError(errors.New("error message")).Caller().AddCode(10).Wrap()
 
 // Cast to type HTTPError
 if castedErr, ok := httperror.CastHTTPError(err); ok {

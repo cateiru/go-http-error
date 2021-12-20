@@ -2,6 +2,7 @@ package httperror
 
 import (
 	"fmt"
+	"runtime"
 )
 
 type HTTPError struct {
@@ -55,11 +56,13 @@ func NewError(statusCode int, err error) *HTTPError {
 // This method is optional.
 //
 // Example:
-//	err := NewNotFoundError(err).Caller("example.go", 10).Wrap()
-func (c *HTTPError) Caller(fileName string, line int) *HTTPError {
-	c.FileName = fileName
-	c.Line = line
-
+//	err := NewNotFoundError(err).Caller().Wrap()
+func (c *HTTPError) Caller() *HTTPError {
+	_, file, line, ok := runtime.Caller(1)
+	if ok {
+		c.FileName = file
+		c.Line = line
+	}
 	return c
 }
 
@@ -70,14 +73,6 @@ func (c *HTTPError) Caller(fileName string, line int) *HTTPError {
 func (c *HTTPError) AddCode(code int) *HTTPError {
 	c.Code = code
 
-	return c
-}
-
-// Convert to error type.
-//
-// Example:
-//	err := NewNotFoundError(err).Wrap()
-func (c *HTTPError) Wrap() error {
 	return c
 }
 
