@@ -3,19 +3,13 @@ package main
 import (
 	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/cateiru/go-http-error/httperror"
-	"github.com/cateiru/go-http-error/httperror/status"
 )
 
 func main() {
-	// Create 404 notfound error
-	err := status.NewNotFoundError(errors.New("error message"))
-
-	fmt.Println(err.Error())
-
-	// Create 404 error, and add filename and line.
-	err = status.NewNotFoundError(errors.New("error message")).Caller().AddCode(0)
+	err := httperror.NewError(http.StatusNotFound, errors.New("error message"))
 
 	fmt.Println(err.Error())
 
@@ -23,7 +17,6 @@ func main() {
 		fmt.Println(castedErr.FileName)
 		fmt.Println(castedErr.Line)
 		fmt.Println(castedErr.StatusCode)
-		fmt.Println(castedErr.Code)
 		fmt.Println(castedErr.Unwrap().Error())
 	}
 

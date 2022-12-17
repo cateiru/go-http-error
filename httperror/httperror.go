@@ -1,6 +1,7 @@
 package httperror
 
 import (
+	"errors"
 	"fmt"
 	"runtime"
 )
@@ -11,8 +12,6 @@ type HTTPError struct {
 	FileName string
 	Line     int
 
-	Code int
-
 	Err error
 }
 
@@ -21,17 +20,19 @@ type HTTPError struct {
 // It can be called in the same way as the normal err.Error().
 //
 // Example:
+//
 //	errMessage := err.Error()
 func (c *HTTPError) Error() string {
 	if len(c.FileName) != 0 {
-		return fmt.Sprintf("\"%s\", line %d, %d:: %s", c.FileName, c.Line, c.StatusCode, c.Err.Error())
+		return fmt.Sprintf("%s:%d, %d, %s", c.FileName, c.Line, c.StatusCode, c.Err.Error())
 	}
-	return fmt.Sprintf("%d:: %s", c.StatusCode, c.Err.Error())
+	return fmt.Sprintf("%d, %s", c.StatusCode, c.Err.Error())
 }
 
 // Unwrap the error.
 //
 // Example:
+//
 //	err := err.Unwrap()
 func (c *HTTPError) Unwrap() error {
 	return c.Err
@@ -40,40 +41,45 @@ func (c *HTTPError) Unwrap() error {
 // Create an HTTPError.
 //
 // Example:
+//
 //	err := NewError(400, errors.New("Bad Request"))
 func NewError(statusCode int, err error) *HTTPError {
+	_, file, line, ok := runtime.Caller(1)
+	if !ok {
+		return &HTTPError{
+			StatusCode: statusCode,
+			FileName:   "",
+			Line:       0,
+			Err:        err,
+		}
+	}
+
 	return &HTTPError{
 		StatusCode: statusCode,
-		FileName:   "",
-		Line:       0,
-		Code:       0,
+		FileName:   file,
+		Line:       line,
 		Err:        err,
 	}
 }
 
-// Specifies the file name and line number when an error occurs.
-//
-// This method is optional.
-//
-// Example:
-//	err := NewNotFoundError(err).Caller().Wrap()
-func (c *HTTPError) Caller() *HTTPError {
+// Create an HTTPError used error message
+func NewStringError(statusCode int, message string) *HTTPError {
 	_, file, line, ok := runtime.Caller(1)
-	if ok {
-		c.FileName = file
-		c.Line = line
+	if !ok {
+		return &HTTPError{
+			StatusCode: statusCode,
+			FileName:   "",
+			Line:       0,
+			Err:        errors.New(message),
+		}
 	}
-	return c
-}
 
-// Added custom codes.
-//
-// Example:
-//	err  NewNotFoundError(err).AddCode(10).Wrap()
-func (c *HTTPError) AddCode(code int) *HTTPError {
-	c.Code = code
-
-	return c
+	return &HTTPError{
+		StatusCode: statusCode,
+		FileName:   file,
+		Line:       line,
+		Err:        errors.New(message),
+	}
 }
 
 // Casts the error to type HTTPError.
@@ -81,6 +87,7 @@ func (c *HTTPError) AddCode(code int) *HTTPError {
 // If it cannot be cast, it returns (nil, false).
 //
 // Example:
+//
 //	if httpError, ok := CastHTTPError(err); ok {
 //		...
 //	}
