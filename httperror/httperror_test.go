@@ -14,7 +14,7 @@ import (
 func TestCreateError(t *testing.T) {
 	p, err := os.Getwd()
 	require.NoError(t, err)
-	err = status.NewInternalServerErrorError(errors.New("test"))
+	err = status.NewInternalServerError(errors.New("test"))
 	require.Equal(t, err.Error(), "500:: test")
 
 	err = status.NewTeapotError(errors.New("test")).Caller()
@@ -24,7 +24,7 @@ func TestCreateError(t *testing.T) {
 func TestCastError(t *testing.T) {
 	p, err := os.Getwd()
 	require.NoError(t, err)
-	err = status.NewInternalServerErrorError(errors.New("test")).Caller().AddCode(10)
+	err = status.NewInternalServerError(errors.New("test")).Caller().AddCode(10)
 
 	if castedErr, ok := httperror.CastHTTPError(err); ok {
 		require.Equal(t, castedErr.StatusCode, 500)
