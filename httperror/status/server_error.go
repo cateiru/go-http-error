@@ -9,7 +9,7 @@ import (
 // 500 Internal Server Error
 //
 // See more: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500
-func NewInternalServerErrorError(err error) *httperror.HTTPError {
+func NewInternalServerError(err error) *httperror.HTTPError {
 	return httperror.NewError(http.StatusInternalServerError, err)
 }
 
