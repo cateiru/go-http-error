@@ -15,14 +15,9 @@ go get -u github.com/cateiru/go-http-error
 ```go
 import (
     "github.com/cateiru/go-http-error/httperror"
-    "github.com/cateiru/go-http-error/httperror/status"
 )
 
-// Create 404 notfound error
-err := status.NewNotFoundError(errors.New("error message"))
-
-// Create 404 error, and add custom code, filename and line.
-err = status.NewNotFoundError(errors.New("error message")).Caller().AddCode(10)
+err = httperror.NewError(http.StatusNotFound, errors.New("error message")).Caller().AddCode(10)
 
 // Cast to type HTTPError
 if castedErr, ok := httperror.CastHTTPError(err); ok {
@@ -35,8 +30,8 @@ if castedErr, ok := httperror.CastHTTPError(err); ok {
     errMessage  := unwrapErr.Error()
 }
 
-// Create custom http status error
-err = httperror.NewError(301, errors.New("error message"))
+// string ver.
+err = httperror.NewStringError(301, "error message")
 ```
 
 ### Example
@@ -44,11 +39,6 @@ err = httperror.NewError(301, errors.New("error message"))
 ```bash
 go run ./example/example.go
 ```
-
-### Support HTTP Status
-
-- See [client_error.go](./httperror/client_error.go) for HTTP status codes in the 400s.
-- See [server_error.go](./httperror/server_error.go) for HTTP status codes in the 500s.
 
 ## LICENSE
 
